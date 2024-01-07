@@ -3,51 +3,47 @@
 namespace App\Exports;
 
 use App\Models\Late;
-use App\Models\Rayon;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Student;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Illuminate\Support\Facades\DB;
 
 class LateExport implements FromCollection, WithHeadings, WithMapping
 {
+
+    /**
+    * @return \Illuminate\Support\Collection
+    */
     public function collection()
     {
-        if (Auth::user()->role == 'admin') {
-            return Late::with('student')
-                ->select('student_id', DB::raw('count(*) as total'))
-                ->groupBy('student_id')
-                ->get();
-        } elseif (Auth::user()->role == 'ps') {
-            $rayon = Rayon::where('user_id', Auth::user()->id)->first();
-            return Late::with('student')
-                ->select('student_id', DB::raw('count(*) as total'))
-                ->groupBy('student_id')
-                ->where('student_id', $rayon->id)
-                ->get();
-        }
+        $this->students = Student::all(); 
+        $this->lateStudents = Late::all()->groupBy('student_id')->map->count();
 
-        return collect(); 
+        return collect($this->students);
+    }
+
+    public function map($item): array
+    {
+        return [
+            $item->id,
+            $item->nis,
+            $item->name,
+            $item->rombel->rombel,
+            $item->rayon->rayon,
+            $this->lateStudents[$item->id] ?? 0,
+
+        ];
     }
 
     public function headings(): array
     {
         return [
-            "Nis", "Nama", "Rombel", "Rayon", "Total Keterlambatan"
-        ];
-    }
-
-    public function map($late): array
-    {
-        $student = $late->student;
-
-        return [
-            $student->nis,
-            $student->name,
-            $student->rombel->rombel,
-            $student->rayon->rayon,
-            $late->total,
+            "No",
+            "NIS",
+            "Nama",
+            "Rombel",
+            "Rayon",
+            "Jumlah Keterlambatan",
         ];
     }
 }

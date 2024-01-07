@@ -10,10 +10,10 @@ class Late extends Model
     use HasFactory;
 
     protected $fillable = [
+        'student_id',
         'date_time_late',
         'information',
-        'bukti',
-        'student_id',
+        'bukti'
     ];
 
     public function student(){

@@ -9,13 +9,11 @@ class Rombel extends Model
 {
     use HasFactory;
 
-    protected $fillable = ([
-        'rombel',
-    ]);
+    protected $fillable = [
+        'rombel'
+    ];
 
-    public function student()
-    {
-        return $this->hasMany(Student::class, 'student_id', 'id');
+    public function student(){
+        return $this->hasMany(Student::class);
     }
-
 }

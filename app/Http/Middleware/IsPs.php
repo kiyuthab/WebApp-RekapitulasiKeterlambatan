@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
 class IsPs
 {
@@ -16,9 +16,9 @@ class IsPs
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::user()->role == 'ps') {
+        if (Auth::user()->role == "ps") {
             return $next($request);
-        }else{
+        } else {
             return redirect()->route('error.permission');
         }
         

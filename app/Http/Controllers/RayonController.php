@@ -3,35 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rayon;
-use App\Models\Late;
 use App\Models\User;
-use App\Models\Student;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 
 class RayonController extends Controller
 {
-
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        $rayon = Rayon::all();
-        $user = User::all();
-        return view('admin.rayon.index', compact('rayon', 'user'));
+        $rayons = Rayon::with('user')->get();
+        return view('rayon.index', compact('rayons'));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        $user = User::all();
-
-        return view('admin.rayon.create', compact('user'));
+        $users = User::all();
+        return view('rayon.create', compact('users'));
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $request->validate([
             'rayon' => 'required',
-            'user_id' => 'required',
+            'user_id' => 'required'
         ]);
 
         Rayon::create([
@@ -39,53 +41,51 @@ class RayonController extends Controller
             'user_id' => $request->user_id,
         ]);
 
-        return redirect()->back()->with('success', 'Berhasil menambahkan data Rayon!');
+        return redirect()->route('rayon.home')->with('success', 'Berhasil menambahkan data Rayon!');
     }
 
-    public function show(string $id)
+    /**
+     * Display the specified resource.
+     */
+    public function show(Rayon $rayon)
     {
         //
     }
 
-    public function edit(string $id)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
     {
-        $rayon = Rayon::find($id);
-        $ps = User::where('role', 'ps')->get();
-        return view('admin.rayon.edit', compact('rayon', 'ps'));
+        $users = User::all();
+        $rayons = Rayon::find($id);
+        return view('rayon.edit', compact('rayons', 'users'));
     }
 
-    public function update(Request $request, string $id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id)
     {
-        $request->validate([
+        $request->validate = [
             'rayon' => 'required',
-            'user_id' => 'required',
-        ]);
-
-        $DataBaru = [
-            'rayon' => $request->rayon,
-            'user_id' => $request->user_id,
+            'user_id' => 'required'
         ];
 
-        Rayon::where('id', $id)->update($DataBaru);
+        Rayon::where('id', $id)->update([
+            'rayon' => $request->rayon,
+            'user_id' => $request->user_id,
+        ]);
 
-        return redirect()->route('rayon.home')->with('success', 'Berhasil mengubah data!');
+        return redirect()->route('rayon.home')->with('success', 'Berhasil mengubah data Rayon!');
     }
 
-    public function destroy(string $id)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Rayon $rayon, $id)
     {
         Rayon::where('id', $id)->delete();
-        return redirect()->back()->with('deleted', 'Berhasil menghapus data!');
-    }
-
-    public function dashboard()
-    {
-        $userRayon = Rayon::where('user_id', Auth::user()->id)->first();
-        $rayonStudentCount = Student::where('rayon_id', $userRayon->id)->count();
-        $today = Carbon::now()->toDateString();
-        $todayLateCount = Late::whereDate('created_at', $today)
-            ->whereIn('student_id', Student::where('rayon_id', $userRayon->id)->pluck('id'))
-            ->count();
-
-        return view('pembimbing.home', compact('rayonStudentCount', 'todayLateCount', 'userRayon'));
+        return redirect()->back()->with('deleted', 'Berhasil menghapus data Rayon!');
     }
 }

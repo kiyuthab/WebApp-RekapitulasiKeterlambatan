@@ -9,23 +9,22 @@ class Student extends Model
 {
     use HasFactory;
 
-    protected $fillable =([
-        'nis',
+    protected $fillable = [
         'name',
+        'nis',
         'rombel_id',
         'rayon_id',
-    ]);
-    
-    public function late(){
-        return $this->hasMany(Late::class);
-    }
+    ];
+
     public function rombel(){
-        return $this->belongsTo(Rombel::class, 'rombel_id', 'id'); //ini yg nerima foreign key
+        return $this->belongsTo(Rombel::class);
     }
 
     public function rayon(){
-        return $this->belongsTo(Rayon::class, 'rayon_id', 'id'); //ini yg nerima foreign key
+        return $this->belongsTo(Rayon::class);
     }
 
+    public function late(){
+        return $this->hasMany(Late::class);
+    }
 }
-
