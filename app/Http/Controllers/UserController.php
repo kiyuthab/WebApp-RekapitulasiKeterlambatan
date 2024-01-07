@@ -28,26 +28,18 @@ class UserController extends Controller
         Auth::logout();
         return redirect()->route('login')->with('logout', 'Anda telah logout !');
     }
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $user = User::all();
         return view('admin.user.index', compact('user'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('admin.user.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -70,26 +62,17 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Berhasil menambahkan data pengguna!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $user = User::find($id);
         return view('admin.user.edit', compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $request->validate([
@@ -104,19 +87,16 @@ class UserController extends Controller
             'role' => $request->role,
         ];
 
-        if($request->filled('password')){
+        if ($request->filled('password')) {
             $DataBaru['password'] = bcrypt($request->password);
         };
 
 
         User::where('id', $id)->update($DataBaru);
-        
+
         return redirect()->route('user.home')->with('success', 'Berhasil mengubah data!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         User::where('id', $id)->delete();

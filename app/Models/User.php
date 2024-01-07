@@ -46,8 +46,6 @@ class User extends Authenticatable
 
     public function rayon()
     {
-        //membuat relasi ke table lain dengan tipe one to many 
-        //dalam kurung merupakan nama modelnya yang akan di sambungkan (tempat FK)
         return $this->hasMany(Rayon::class, 'user_id', 'id');
     }
 }

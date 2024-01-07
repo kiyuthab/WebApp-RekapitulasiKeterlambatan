@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $rayon = Rayon::all();
@@ -22,15 +20,14 @@ class StudentController extends Controller
         return view('admin.student.index', compact('student', 'rayon', 'rombel'));
     }
 
-    public function indexPs(){
+    public function indexPs()
+    {
         $rayon = Rayon::where('user_id', Auth::user()->id)->first();
         $student = Student::where('rayon_id', $rayon->id)->get();
         $rombel = Rombel::all();
         return view('pembimbing.student.home', compact('student', 'rayon', 'rombel'));
     }
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
 
@@ -40,25 +37,19 @@ class StudentController extends Controller
         return view('admin.student.create', compact('rayon', 'rombel'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validateData = $request->validate([
-            'nis'=>'required',
-            'name'=>'required',
-            'rayon_id'=>'required',
-            'rombel_id'=>'required',
+            'nis' => 'required',
+            'name' => 'required',
+            'rayon_id' => 'required',
+            'rombel_id' => 'required',
         ]);
 
         Student::create($validateData);
         return redirect()->back()->with('success', 'Berhasil menambahkan data Siswa !');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $student = Student::with('rayon', 'rombel')->find($id);
@@ -67,30 +58,24 @@ class StudentController extends Controller
         return view('admin.student.edit', compact('student', 'rombels', 'rayons'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
-    $validatedData = $request->validate([
-        'nis' => 'required',
-        'name' => 'required',
-        'rayon_id' => 'required',
-        'rombel_id' => 'required',
-    ]);
+        $validatedData = $request->validate([
+            'nis' => 'required',
+            'name' => 'required',
+            'rayon_id' => 'required',
+            'rombel_id' => 'required',
+        ]);
 
-    Student::where('id', $id)->update($validatedData);
+        Student::where('id', $id)->update($validatedData);
 
-    return redirect()->route('student.home')->with('success', 'Berhasil mengubah data!');
+        return redirect()->route('student.home')->with('success', 'Berhasil mengubah data!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $deleted = Late::where('student_id', $id)->get();
-        if ($deleted){
+        if ($deleted) {
             foreach ($deleted as $item) {
                 $item->delete();
             }

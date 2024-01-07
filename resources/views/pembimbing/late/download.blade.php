@@ -11,16 +11,16 @@
             margin: 20px 40px;
         }
 
-        .card{
+        .card {
             padding: 2px;
             width: 18rem;
             float: left;
-            margin-top: 9px; 
+            margin-top: 9px;
             text-align: center;
         }
 
 
-        .card2{
+        .card2 {
             padding: 2px;
             width: 18rem;
             float: right;
@@ -42,7 +42,7 @@
             padding-right: 200px;
         }
 
-        .info2{
+        .info2 {
             font-family: Arial, Helvetica, sans-serif;
             font-size: small;
             padding: 5px;
@@ -70,7 +70,7 @@
             text-align: center;
         }
 
-        .ttd{
+        .ttd {
             margin-left: 50px;
         }
     </style>
@@ -92,26 +92,26 @@
 
                 <table>
                     <tr>
-                      <td>NIS</td>
-                      <td>:</td>
-                      <td>{{ $student['nis'] }} </td>
+                        <td>NIS</td>
+                        <td>:</td>
+                        <td>{{ $student['nis'] }} </td>
                     </tr>
                     <tr>
-                      <td>Nama </td>
-                      <td>:</td>
-                      <td>{{ $student['name']}}</td>
+                        <td>Nama </td>
+                        <td>:</td>
+                        <td>{{ $student['name'] }}</td>
                     </tr>
                     <tr>
-                      <td>Rombel</td>
-                      <td>:</td>
-                      <td> {{ $rombel['rombel']}}</td>
+                        <td>Rombel</td>
+                        <td>:</td>
+                        <td> {{ $rombel['rombel'] }}</td>
                     </tr>
                     <tr>
                         <td>Rayon </td>
                         <td>:</td>
-                        <td>{{ $rayon['rayon']}}</td>
+                        <td>{{ $rayon['rayon'] }}</td>
                     </tr>
-                  </table>
+                </table>
 
                 <br>
                 <p>Dengan ini menyatakan bahwa saya telah melakukan pelanggaran tata tertib sekolah, yaitu terlambat
@@ -125,7 +125,7 @@
         </div>
         <div class="bot">
             <div class="date">
-                <p>Bogor, <?php echo strftime(" %d %B %Y"); ?></p>
+                <p>Bogor, <?php echo strftime(' %d %B %Y'); ?></p>
             </div>
             <div class="infoo">
                 <div class="card">
@@ -138,7 +138,7 @@
                     <div class="ttd">
                         <p>Pembimbing Siswa,</p>
                         <br> <br> <br>
-                        <p >( {{ $ps['name'] }} )</p>
+                        <p>( {{ $ps['name'] }} )</p>
                     </div><br>
                 </div>
             </div>

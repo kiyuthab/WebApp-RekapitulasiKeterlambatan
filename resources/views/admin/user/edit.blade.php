@@ -1,15 +1,15 @@
 @extends('layouts.template')
 
 @section('content')
-<style>
-    a{
-        text-decoration: none;
-    }
-</style>
-<div class="title" style="margin: 4px 15px;">
-    <h3>Edit Data User</h3>
-    <a href="/home">Dashboard / </a><a href="{{ route('user.home') }}">Data User / </a><a >Edit Data User</a>
-</div><br>
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
+    <div class="title" style="margin: 4px 15px;">
+        <h3>Edit Data User</h3>
+        <a href="/home">Dashboard / </a><a href="{{ route('user.home') }}">Data User / </a><a>Edit Data User</a>
+    </div><br>
 
     <form action="{{ route('user.update', $user['id']) }}" method="POST" class="card p-5">
         @csrf
@@ -41,8 +41,8 @@
             <label for="name" class="col-sm-4 ccol-form-label"> Tipe Pengguna</label>
             <div class="col-sm-10">
                 <select class="form-select" id="role" name="role">
-                    <option value="admin" {{ $user['role'] == 'admin' ? 'selected' : ''}}>Admin</option>
-                    <option value="ps" {{ $user['role'] == 'ps' ? 'selected' : ''}}>Pembimbing Siswa</option>
+                    <option value="admin" {{ $user['role'] == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="ps" {{ $user['role'] == 'ps' ? 'selected' : '' }}>Pembimbing Siswa</option>
                 </select>
             </div>
         </div>
@@ -50,11 +50,11 @@
         <div class="mb-3 row">
             <label for="name" class="col-sm-4 ccol-form-label"> Ubah Password </label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="password" name="password" >
+                <input type="text" class="form-control" id="password" name="password">
             </div>
         </div>
 
         <button type="submit" class="btn btn-primary mt-3">Ubah Data</button>
-        
+
     </form>
-    @endsection
+@endsection

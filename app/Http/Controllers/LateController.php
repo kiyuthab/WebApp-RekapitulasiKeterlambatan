@@ -19,43 +19,29 @@ use App\Exports\LateExport;
 
 class LateController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $late = Late::with('student')->get();
         return view('admin.late.index', compact('late'));
-        // dd($late);
+
     }
 
     public function indexPs(){
         $rayon = Rayon::where('user_id', Auth::user()->id)->first();
         $student = Student::where('rayon_id', $rayon->id)->get();
-        
-        // Fetch late entries related to students in the current rayon
         $late = Late::whereIn('student_id', $student->pluck('id'))->get();
         $rombel = Rombel::all();
     
         return view('pembimbing.late.index', compact('late', 'student', 'rayon', 'rombel'));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $student = Student::all();
         return view('admin.late.create', compact('student'));
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // return $request->file('bukti')->store('post_bukti');
-
         $request->validate([
             'student_id' => 'required',
             'date_time_late' => 'required',
@@ -81,20 +67,12 @@ class LateController extends Controller
 
         return redirect()->route('rekap.telat')->with('success', 'Berhasil menambahkan data keterlambatan!');
     }
-
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         $late = Late::find($id);
         return view('admin.late.edit', compact('late'));
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
         $late = Late::with('student')->find($id);
@@ -102,9 +80,6 @@ class LateController extends Controller
         return view('admin.late.edit', compact('late', 'student'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $request->validate ([
@@ -138,9 +113,6 @@ class LateController extends Controller
         return redirect()->route('late.home')->with('success', 'Berhasil mengubah data!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         $late = Late::find($id);
@@ -152,18 +124,6 @@ class LateController extends Controller
         Late::destroy($id);
         return redirect()->back()->with('deleted', 'Berhasil menghapus data!');
     } 
-
-    // public function rekap($id = null)
-    // {
-    //     if ($id) {
-    //         $student = Student::findOrFail($id);
-    //         $late = Late::with('student')->where('student_id', $id)->get();
-    //         return view('admin.late.rekap', compact('student', 'late'));
-    //     }
-    
-    //     $students = Student::with('late')->get();
-    //     return view('admin.late.rekap', compact('students'));
-    // }
 
     public function detail($id)
     {
@@ -186,7 +146,6 @@ class LateController extends Controller
             ->select('student_id', DB::raw('count(*) as total'))
             ->groupBy('student_id')
             ->get();
-        // dd($rekap);
 
         return view('admin.late.rekap', compact('rekap'));
     }
