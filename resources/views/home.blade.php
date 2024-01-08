@@ -87,6 +87,14 @@
         color: black;
     }
 
+    .jumlah {
+      font-size: 40px;
+      font-weight: 400;
+      margin-left: 10px;
+      margin-top: 8px;
+      color: #0024AC;
+    }
+
     .card{
       border: none;
     }

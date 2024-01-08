@@ -114,7 +114,7 @@ class UserController extends Controller
 
         $user = $request->only(['email', 'password']);
         if (Auth::attempt($user)){
-            return redirect()->route('home');
+            return redirect()->route('ps.home');
         }else{
             return redirect()->back()->with('failed', 'Proses login gagal, silahkan coba kembali dengan data yang benar!');
         }

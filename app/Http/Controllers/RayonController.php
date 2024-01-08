@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Rayon;
 use App\Models\User;
+use App\Models\Late;
+use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RayonController extends Controller
 {
@@ -87,5 +91,18 @@ class RayonController extends Controller
     {
         Rayon::where('id', $id)->delete();
         return redirect()->back()->with('deleted', 'Berhasil menghapus data Rayon!');
+    }
+
+    // PEMBIMBING SISWA 
+    public function dashboard()
+    {
+        $userRayon = Rayon::where('user_id', Auth::user()->id)->first();
+        $rayonStudentCount = Student::where('rayon_id', $userRayon->id)->count();
+        $today = Carbon::now()->toDateString();
+        $todayLateCount = Late::whereDate('created_at', $today)
+            ->whereIn('student_id', Student::where('rayon_id', $userRayon->id)->pluck('id'))
+            ->count();
+
+        return view('pembimbing.home', compact('rayonStudentCount', 'todayLateCount', 'userRayon'));
     }
 }

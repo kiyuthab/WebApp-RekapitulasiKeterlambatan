@@ -42,8 +42,14 @@ Route::get('/error-permission', function(){
     return view('errors.permission');
 })->name('error.permission');
 
+// Route::middleware(['IsLogin'])->group(function () {
+//     Route::get('/home', function () {
+//         return view('home');
+//     })->name('home');
+// });
+
 Route::middleware('isLogin', 'isAdmin')->group(function(){
-    Route::get('/Dashboard', [Controller::class, 'index'])->name('dashboard');
+    Route::get('/', [Controller::class, 'index'])->name('dashboard');
     
     // routing fitur data rombel
     Route::prefix('/rombel')->name('rombel.')->group(function(){
@@ -106,11 +112,9 @@ Route::middleware('isLogin', 'isAdmin')->group(function(){
 
 Route::middleware('isLogin', 'isPs')->group(function(){
     Route::prefix('/ps')->name('ps.')->group(function(){
-        Route::get('/home', function(){
-            return view('welcome');
-        })->name('home');
+        Route::get('/home', [RayonController::class, 'dashboard'])->name('home');
 
-        oute::prefix('/student')->name('student.')->group(function() {
+        Route::prefix('/student')->name('student.')->group(function() {
             Route::get('/', [StudentController::class, 'indexPs'])->name('home');
         });
 

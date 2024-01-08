@@ -6,6 +6,7 @@ use App\Models\Student;
 use App\Models\Rombel;
 use App\Models\Rayon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -100,6 +101,8 @@ class StudentController extends Controller
         return redirect()->back()->with('delete', 'Berhasil menghapus data Siswa!');
     }
 
+    // PEMBIMBING SISWA
+
     public function indexPs()
     {
         $rayon = Rayon::where('user_id', Auth::user()->id)->first();
@@ -107,4 +110,6 @@ class StudentController extends Controller
         $rombel = Rombel::all();
         return view('ps.student.home', compact('student', 'rayon', 'rombel'));
     }
+
+
 }

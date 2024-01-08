@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use App\Models\Late;
 use App\Models\Student;
+use App\Models\Rombel;
+use App\Models\Rayon;
 use Illuminate\Http\Request;
 use PDF;
 use Excel;
 use App\Exports\LateExport;
+use Illuminate\Support\Facades\Auth;
+
 
 class LateController extends Controller
 {
@@ -154,10 +158,74 @@ class LateController extends Controller
         return Excel::download($export, 'rekap_keterlambatan.xlsx');
     }
 
+    // PEMBIMBING SISWA
+
+    public function indexPs(){
+        $rayon = Rayon::where('user_id', Auth::user()->id)->first();
+        $student = Student::where('rayon_id', $rayon->id)->get();
+        $late = Late::whereIn('student_id', $student->pluck('id'))->get();
+        $rombel = Rombel::all();
+    
+        return view('ps.late.index', compact('late', 'student', 'rayon', 'rombel'));
+    }
+
     public function detailPs($id)
     {
         $student = Student::findOrFail($id);
-        $late = Late::with('student')->where('student_id', $id)->get();
-        return view('ps.detail', compact('late', 'student'));
+        $lates = Late::with('student')->where('student_id', $id)->get();
+        return view('ps.late.detail', compact('lates', 'student'));
     }   
+
+    public function laterekapPs()
+    {
+        $rayon = Rayon::where('user_id', Auth::user()->id)->first();
+        $student = Student::where('rayon_id', $rayon->id)->get();
+        $late = Late::whereIn('student_id', $student->pluck('id'))->get();
+        $rekap = Late::select('student_id', DB::raw('count(*) as total'))
+            ->whereIn('student_id', $student->pluck('id'))
+            ->groupBy('student_id')
+            ->get();
+
+        return view('ps.late.rekap', compact('rekap', 'late', 'rayon', 'student'));
+    }
+
+    public function printPs($id) 
+    {
+        $student = Student::findOrFail($id);
+        $late = Late::with('student')->where('student_id', $id)->get();
+        return view("ps.late.print", compact('late', 'student'));
+    }
+
+    public function downloadPDFps($id)
+    {
+        $late = Late::find($id)->toArray();
+        view()->share('late',$late);
+
+        $student = Student::where('id', $late['student_id'])->first()->toArray();
+        view()->share('student',$student);
+
+        $rayon = Rayon::where('id', $student['rayon_id'])->first()->toArray();
+        view()->share('rayon',$rayon);
+        
+        $rombel = Rombel::where('id', $student['rombel_id'])->first()->toArray();
+        view()->share('rombel',$rombel);
+
+        $ps = User::where('id', $rayon['user_id'])->first()->toArray();
+        view()->share('ps',$ps);
+
+        $pdf = PDF::loadview('ps.late.download', $late);
+        return $pdf->download('Surat_Pernyataan.pdf');
+    }
+
+    public function dataPs()
+    {
+        $late = Late::with('student')->simplePaginate(5);
+        return view("ps.late.index", compact('late'));
+    }
+
+    public function exportexcelPs()
+    {
+        $rayon = Rayon::where('user_id', Auth::user()->id)->first();
+        return Excel::download(new \App\Exports\LateExport, 'data_keterlambatan '.$rayon->rayon.'.xlsx');
+    }
 }
